@@ -1,0 +1,159 @@
+
+using System;
+
+class Estudiante
+{
+    // Propiedades del estudiante
+    public string Cedula { get; set; }
+    public string Nombre { get; set; }
+    public string Apellido { get; set; }
+    public string Correo { get; set; }
+    public double NotaDefinitiva { get; set; }
+
+    // Constructor de la clase Estudiante
+    public Estudiante(string cedula, string nombre, string apellido, string correo, double notaDefinitiva)
+    {
+        Cedula = cedula;
+        Nombre = nombre;
+        Apellido = apellido;
+        Correo = correo;
+        NotaDefinitiva = notaDefinitiva;
+    }
+}
+
+class Nodo
+{
+    // Propiedades del nodo
+    public Estudiante Dato { get; set; }
+    public Nodo Siguiente { get; set; }
+
+    // Constructor de la clase Nodo
+    public Nodo(Estudiante dato)
+    {
+        Dato = dato;
+        Siguiente = null;
+    }
+}
+
+class ListaEnlazada
+{
+    private Nodo cabeza; // Primer nodo de la lista
+
+    // Método para agregar un estudiante a la lista
+    public void AgregarEstudiante(Estudiante estudiante)
+    {
+        Nodo nuevoNodo = new Nodo(estudiante);
+        if (estudiante.NotaDefinitiva >= 6)
+        {
+            // Agregar al inicio si aprobado
+            nuevoNodo.Siguiente = cabeza;
+            cabeza = nuevoNodo;
+        }
+        else
+        {
+            // Agregar al final si reprobado
+            if (cabeza == null)
+            {
+                cabeza = nuevoNodo;
+            }
+            else
+            {
+                Nodo actual = cabeza;
+                while (actual.Siguiente != null)
+                {
+                    actual = actual.Siguiente;
+                }
+                actual.Siguiente = nuevoNodo;
+            }
+        }
+        Console.WriteLine($"Estudiante {estudiante.Nombre} {estudiante.Apellido} agregado.");
+    }
+
+    // Método para buscar un estudiante por cédula
+    public void BuscarEstudiante(string cedula)
+    {
+        Nodo actual = cabeza;
+        while (actual != null)
+        {
+            if (actual.Dato.Cedula == cedula)
+            {
+                Console.WriteLine($"Estudiante encontrado: {actual.Dato.Nombre} {actual.Dato.Apellido}, Nota: {actual.Dato.NotaDefinitiva}");
+                return;
+            }
+            actual = actual.Siguiente;
+        }
+        Console.WriteLine("Estudiante no encontrado.");
+    }
+
+    // Método para eliminar un estudiante por cédula
+    public void EliminarEstudiante(string cedula)
+    {
+        if (cabeza == null)
+        {
+            Console.WriteLine("Lista vacía, no se puede eliminar.");
+            return;
+        }
+
+        if (cabeza.Dato.Cedula == cedula)
+        {
+            cabeza = cabeza.Siguiente;
+            Console.WriteLine("Estudiante eliminado exitosamente.");
+            return;
+        }
+
+        Nodo actual = cabeza;
+        while (actual.Siguiente != null)
+        {
+            if (actual.Siguiente.Dato.Cedula == cedula)
+            {
+                actual.Siguiente = actual.Siguiente.Siguiente;
+                Console.WriteLine("Estudiante eliminado exitosamente.");
+                return;
+            }
+            actual = actual.Siguiente;
+        }
+
+        Console.WriteLine("Estudiante no encontrado.");
+    }
+
+    // Método para contar estudiantes aprobados o reprobados
+    public void ContarEstudiantes(bool aprobados)
+    {
+        int contador = 0;
+        Nodo actual = cabeza;
+        while (actual != null)
+        {
+            if ((aprobados && actual.Dato.NotaDefinitiva >= 6) || (!aprobados && actual.Dato.NotaDefinitiva < 6))
+            {
+                contador++;
+            }
+            actual = actual.Siguiente;
+        }
+        string resultado = aprobados ? "aprobados" : "reprobados";
+        Console.WriteLine($"Total estudiantes {resultado}: {contador}");
+    }
+}
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        ListaEnlazada lista = new ListaEnlazada();
+
+        // Agregar estudiantes a la lista
+        lista.AgregarEstudiante(new Estudiante("1234567890", "Juan", "Perez", "juan.perez@gmail.com", 8));
+        lista.AgregarEstudiante(new Estudiante("0987654321", "Ana", "Gomez", "ana.gomez@gmail.com", 5));
+
+        // Buscar estudiante por cédula
+        lista.BuscarEstudiante("1234567890");
+
+        // Contar total de estudiantes aprobados
+        lista.ContarEstudiantes(true);
+
+        // Contar total de estudiantes reprobados
+        lista.ContarEstudiantes(false);
+
+        // Eliminar un estudiante
+        lista.EliminarEstudiante("1234567890");
+    }
+}
