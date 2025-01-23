@@ -1,0 +1,120 @@
+
+// Clase que representa a un Estudiante
+class Estudiante
+{
+    public string Cedula { get; set; }
+    public string Nombre { get; set; }
+    public double Nota { get; set; }
+}
+
+// Clase que representa a un Vehículo
+class Vehiculo
+{
+    public string Placa { get; set; }
+    public string Marca { get; set; }
+    public string Modelo { get; set; }
+    public int Año { get; set; }
+    public decimal Precio { get; set; }
+}
+
+class Program
+{
+    // Listas enlazadas para almacenar estudiantes y vehículos
+    static LinkedList<Estudiante> estudiantes = new LinkedList<Estudiante>();
+    static LinkedList<Vehiculo> vehiculos = new LinkedList<Vehiculo>();
+
+    static void Main(string[] args)
+    {
+        // Ejemplos de uso
+        
+        // Agregar estudiantes a la lista
+        AgregarEstudiante(new Estudiante { Cedula = "123", Nombre = "Juan", Nota = 7.5 });
+        AgregarEstudiante(new Estudiante { Cedula = "456", Nombre = "Ana", Nota = 5.0 });
+
+        // Agregar vehículos a la lista
+        AgregarVehiculo(new Vehiculo { Placa = "ABC123", Marca = "Toyota", Modelo = "Corolla", Año = 2020, Precio = 20000m });
+        AgregarVehiculo(new Vehiculo { Placa = "XYZ456", Marca = "Honda", Modelo = "Civic", Año = 2018, Precio = 18000m });
+
+        // Buscar estudiante por cédula
+        BuscarEstudiante("123");
+        // Buscar vehículo por placa
+        BuscarVehiculo("ABC123");
+        
+        // Contar y mostrar total de estudiantes aprobados
+        TotalEstudiantes(true);
+        // Contar y mostrar total de estudiantes reprobados
+        TotalEstudiantes(false);
+        
+        // Ver todos los vehículos registrados
+        VerTodosLosVehiculos();
+    }
+
+    // Método para agregar un estudiante a la lista
+    static void AgregarEstudiante(Estudiante estudiante)
+    {
+        // Agregar al inicio si aprobado, al final si reprobado
+        if (estudiante.Nota >= 6)
+            estudiantes.AddFirst(estudiante);
+        else
+            estudiantes.AddLast(estudiante);
+        Console.WriteLine($"Estudiante {estudiante.Nombre} agregado.");
+    }
+
+    // Método para buscar un estudiante por cédula
+    static void BuscarEstudiante(string cedula)
+    {
+        // Buscar en la lista de estudiantes
+        foreach (var est in estudiantes)
+        {
+            if (est.Cedula == cedula)
+            {
+                Console.WriteLine($"Estudiante encontrado: {est.Nombre}, Nota: {est.Nota}");
+                return;
+            }
+        }
+        Console.WriteLine("Estudiante no encontrado.");
+    }
+
+    // Método para contar y mostrar total de estudiantes aprobados o reprobados
+    static void TotalEstudiantes(bool aprobados)
+    {
+        int contador = 0;
+        foreach (var est in estudiantes)
+        {
+            if ((aprobados && est.Nota >= 6) || (!aprobados && est.Nota < 6))
+                contador++;
+        }
+        Console.WriteLine($"Total {(aprobados ? "aprobados" : "reprobados")}: {contador}");
+    }
+
+    // Método para agregar un vehículo a la lista
+    static void AgregarVehiculo(Vehiculo vehiculo)
+    {
+        vehiculos.AddLast(vehiculo);
+        Console.WriteLine($"Vehículo {vehiculo.Marca} {vehiculo.Modelo} agregado.");
+    }
+
+    // Método para buscar un vehículo por placa
+    static void BuscarVehiculo(string placa)
+    {
+        foreach (var veh in vehiculos)
+        {
+            if (veh.Placa == placa)
+            {
+                Console.WriteLine($"Vehículo encontrado: {veh.Marca} {veh.Modelo}, Año: {veh.Año}, Precio: {veh.Precio}");
+                return;
+            }
+        }
+        Console.WriteLine("Vehículo no encontrado.");
+    }
+
+    // Método para ver todos los vehículos registrados
+    static void VerTodosLosVehiculos()
+    {
+        Console.WriteLine("Vehículos registrados:");
+        foreach (var veh in vehiculos)
+        {
+            Console.WriteLine($"Placa: {veh.Placa}, Marca: {veh.Marca}, Modelo: {veh.Modelo}, Año: {veh.Año}, Precio: {veh.Precio:C}");
+        }
+    }
+}
