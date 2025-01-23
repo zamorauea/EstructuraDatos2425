@@ -1,0 +1,112 @@
+
+using System;
+
+class Nodo
+{
+    public int Dato; // Valor del nodo
+    public Nodo Siguiente; // Referencia al siguiente nodo
+
+    // Constructor que inicializa el nodo con un valor
+    public Nodo(int dato)
+    {
+        Dato = dato;
+        Siguiente = null;
+    }
+}
+
+class ListaEnlazada
+{
+    private Nodo cabeza; // Primer nodo de la lista
+
+    public ListaEnlazada()
+    {
+        cabeza = null;
+    }
+
+    // Método para agregar un nodo al final de la lista
+    public void Agregar(int dato)
+    {
+        Nodo nuevoNodo = new Nodo(dato);
+        if (cabeza == null)
+        {
+            cabeza = nuevoNodo;
+        }
+        else
+        {
+            Nodo actual = cabeza;
+            while (actual.Siguiente != null)
+            {
+                actual = actual.Siguiente;
+            }
+            actual.Siguiente = nuevoNodo;
+        }
+    }
+
+    // Método para eliminar nodos fuera del rango
+    public void EliminarFueraDeRango(int min, int max)
+    {
+        // Eliminar nodos del inicio que están fuera del rango
+        while (cabeza != null && (cabeza.Dato < min || cabeza.Dato > max))
+        {
+            cabeza = cabeza.Siguiente;
+        }
+
+        // Eliminar nodos en el medio o final de la lista
+        Nodo actual = cabeza;
+        while (actual != null && actual.Siguiente != null)
+        {
+            if (actual.Siguiente.Dato < min || actual.Siguiente.Dato > max)
+            {
+                actual.Siguiente = actual.Siguiente.Siguiente;
+            }
+            else
+            {
+                actual = actual.Siguiente;
+            }
+        }
+    }
+
+    // Método para imprimir los elementos de la lista
+    public void Imprimir()
+    {
+        Nodo actual = cabeza;
+        while (actual != null)
+        {
+            Console.Write(actual.Dato + " -> ");
+            actual = actual.Siguiente;
+        }
+        Console.WriteLine("null");
+    }
+}
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        ListaEnlazada lista = new ListaEnlazada();
+        Random rand = new Random();
+
+        // Crear lista con 50 números aleatorios
+        for (int i = 0; i < 50; i++)
+        {
+            lista.Agregar(rand.Next(1, 1000));
+        }
+
+        // Imprimir lista original
+        Console.WriteLine("Lista original:");
+        lista.Imprimir();
+
+        // Leer rango de valores del teclado
+        Console.WriteLine("Ingrese el valor mínimo:");
+        int min = int.Parse(Console.ReadLine());
+        Console.WriteLine("Ingrese el valor máximo:");
+        int max = int.Parse(Console.ReadLine());
+
+        // Eliminar nodos fuera del rango
+        lista.EliminarFueraDeRango(min, max);
+
+        // Imprimir lista modificada
+        Console.WriteLine("Lista modificada:");
+        lista.Imprimir();
+    }
+}
