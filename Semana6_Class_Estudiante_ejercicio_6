@@ -1,0 +1,79 @@
+class Estudiante
+{
+    public string Cedula { get; set; }
+    public string Nombre { get; set; }
+    public double Nota { get; set; }
+    public Estudiante Siguiente { get; set; } // Apunta al siguiente estudiante en la lista
+}
+
+class ListaEnlazada
+{
+    private Estudiante inicio; // Inicio de la lista
+    private Estudiante fin;   // Final de la lista
+
+    // Agregar estudiante al inicio (aprobado) o al final (reprobado)
+    public void Agregar(string cedula, string nombre, double nota)
+    {
+        Estudiante nuevo = new Estudiante { Cedula = cedula, Nombre = nombre, Nota = nota };
+
+        if (nota >= 6.0) // Aprobado
+        {
+            nuevo.Siguiente = inicio;
+            inicio = nuevo;
+        }
+        else // Reprobado
+        {
+            if (inicio == null) inicio = fin = nuevo;
+            else { fin.Siguiente = nuevo; fin = nuevo; }
+        }
+    }
+
+    // Buscar estudiante por cédula
+    public Estudiante Buscar(string cedula)
+    {
+        Estudiante actual = inicio;
+        while (actual != null)
+        {
+            if (actual.Cedula == cedula) return actual; // Estudiante encontrado
+            actual = actual.Siguiente;
+        }
+        return null; // No encontrado
+    }
+
+    // Contar estudiantes según si están aprobados o reprobados
+    public (int aprobados, int reprobados) Contar()
+    {
+        int aprobados = 0, reprobados = 0;
+        Estudiante actual = inicio;
+        while (actual != null)
+        {
+            if (actual.Nota >= 6.0) aprobados++;
+            else reprobados++;
+            actual = actual.Siguiente;
+        }
+        return (aprobados, reprobados);
+    }
+}
+
+class Program
+{
+    static void Main()
+    {
+        ListaEnlazada lista = new ListaEnlazada();
+
+        // Agregar estudiantes
+        lista.Agregar("001", "Viviana", 8.0);
+        lista.Agregar("002", "Manuel", 5.5);
+        lista.Agregar("003", "Isabela", 7.5);
+
+        // Buscar estudiante
+        var estudiante = lista.Buscar("002");
+        Console.WriteLine(estudiante != null
+            ? $"Estudiante encontrado: {estudiante.Nombre}, Nota: {estudiante.Nota}"
+            : "Estudiante no encontrado.");
+
+        // Contar aprobados y reprobados
+        var (aprobados, reprobados) = lista.Contar();
+        Console.WriteLine($"Aprobados: {aprobados}, Reprobados: {reprobados}");
+    }
+}
