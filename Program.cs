@@ -1,7 +1,12 @@
-﻿
-Console.WriteLine("Universidad Estala Amazonia"); 
-Console.WriteLine(""); 
+using System;
 
-Rectangulo figura1 = new Rectangulo (4,7); 
-Console.WriteLine("El area del rectangulo es:" + figura1. Area());
-
+namespace MyConsoleApp
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Console.WriteLine("Hello, World!");
+        }
+    }
+}
